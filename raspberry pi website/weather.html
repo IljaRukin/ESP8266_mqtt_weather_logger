@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<head>
+<title>weather logger</title>
+<style>
+    body {
+        width: 80%;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+  background:#444;
+  color:#ddd;
+    }
+</style>
+
+<script src="https://d3js.org/d3.v4.js"></script>
+</head>
+<body>
+<h1>weather logger</h1>
+<p>This site displays the weather data (pressure,humidity,temperature) on our balcony.</p>
+
+
+<h2>Temperature in °C</h2>
+<div id="temperature"></div>
+
+<script>
+
+// parse the date / time
+var parseTime = d3.timeParse("%d-%m-%Y_%H:%M:%S");
+
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 30, bottom: 30, left: 60},
+    width1 = 800 - margin.left - margin.right,
+    height1 = 300 - margin.top - margin.bottom;
+
+// set the ranges
+var x1 = d3.scaleTime().range([0, width1]);
+var y1 = d3.scaleLinear().range([height1, 0]);
+
+// define the 1st line
+var valueline1 = d3.line()
+    .x(function(d) { return x1(d.date); })
+    .y(function(d) { return y1(d.temperature); });
+
+// append the svg obgect to the the page
+var svg1 = d3.select("#temperature")
+  .append("svg")
+    .attr("width", width1 + margin.left + margin.right)
+    .attr("height", height1 + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+//##### Get the data #####
+
+d3.csv("weather/temperature.csv", function(error, data) {
+  if (error) throw error;
+
+  // format the data
+  data.forEach(function(d) {
+      d.date = parseTime(d.date);
+      d.temperature = +d.temperature;
+  });
+
+//##### plot#####
+
+  // Scale the range of the data
+  x1.domain(d3.extent(data, function(d) { return d.date; }));
+  y1.domain([d3.min(data, function(d) {
+    return Math.min(d.temperature); })
+    ,d3.max(data, function(d) {
+    return Math.max(d.temperature); })]);
+
+  // Add the valueline path.
+  svg1.append("path")
+      .data([data])
+      .attr("fill", "none")
+      .attr("class", "line")
+      .style("stroke", "red")
+      .attr("d", valueline1);
+
+  // Add the X Axis
+  svg1.append("g")
+      .attr("transform", "translate(0," + height1 + ")")
+      .call(d3.axisBottom(x1));
+
+  // Add the Y Axis
+  svg1.append("g")
+      .call(d3.axisLeft(y1));
+
+});
+
+</script>
+
+<h2>Humidity in %</h2>
+<div id="humidity"></div>
+
+<script>
+
+// parse the date / time
+var parseTime = d3.timeParse("%d-%m-%Y_%H:%M:%S");
+
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 30, bottom: 30, left: 60},
+    width1 = 800 - margin.left - margin.right,
+    height1 = 300 - margin.top - margin.bottom;
+
+// set the ranges
+var x2 = d3.scaleTime().range([0, width1]);
+var y2 = d3.scaleLinear().range([height1, 0]);
+
+// define the 1st line
+var valueline2 = d3.line()
+    .x(function(d) { return x2(d.date); })
+    .y(function(d) { return y2(d.humidity); });
+
+// append the svg obgect to the the page
+var svg2 = d3.select("#humidity")
+  .append("svg")
+    .attr("width", width1 + margin.left + margin.right)
+    .attr("height", height1 + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+//##### Get the data #####
+
+d3.csv("weather/humidity.csv", function(error, data) {
+  if (error) throw error;
+
+  // format the data
+  data.forEach(function(d) {
+      d.date = parseTime(d.date);
+      d.humidity = +d.humidity;
+  });
+
+//##### plot#####
+
+  // Scale the range of the data
+  x2.domain(d3.extent(data, function(d) { return d.date; }));
+  y2.domain([0,100]);
+
+  // Add the valueline path.
+  svg2.append("path")
+      .data([data])
+      .attr("fill", "none")
+      .attr("class", "line")
+      .style("stroke", "blue")
+      .attr("d", valueline2);
+
+  // Add the X Axis
+  svg2.append("g")
+      .attr("transform", "translate(0," + height1 + ")")
+      .call(d3.axisBottom(x2));
+
+  // Add the Y Axis
+  svg2.append("g")
+      .call(d3.axisLeft(y2));
+
+});
+
+</script>
+
+<h2>Pressure in mBar</h2>
+<div id="pressure"></div>
+
+<script>
+
+// parse the date / time
+var parseTime = d3.timeParse("%d-%m-%Y_%H:%M:%S");
+
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 30, bottom: 30, left: 60},
+    width1 = 800 - margin.left - margin.right,
+    height1 = 300 - margin.top - margin.bottom;
+
+// set the ranges
+var x3 = d3.scaleTime().range([0, width1]);
+var y3 = d3.scaleLinear().range([height1, 0]);
+
+// define the 1st line
+var valueline3 = d3.line()
+    .x(function(d) { return x3(d.date); })
+    .y(function(d) { return y3(d.pressure); });
+
+// append the svg obgect to the the page
+var svg3 = d3.select("#pressure")
+  .append("svg")
+    .attr("width", width1 + margin.left + margin.right)
+    .attr("height", height1 + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+//##### Get the data #####
+
+d3.csv("weather/pressure.csv", function(error, data) {
+  if (error) throw error;
+
+  // format the data
+  data.forEach(function(d) {
+      d.date = parseTime(d.date);
+      d.pressure = +d.pressure;
+  });
+
+//##### plot#####
+
+  // Scale the range of the data
+  x3.domain(d3.extent(data, function(d) { return d.date; }));
+  y3.domain([d3.min(data, function(d) {
+    return Math.min(d.pressure); })
+    ,d3.max(data, function(d) {
+    return Math.max(d.pressure); })]);
+
+  // Add the valueline path.
+  svg3.append("path")
+      .data([data])
+      .attr("fill", "none")
+      .attr("class", "line")
+      .style("stroke", "orange")
+      .attr("d", valueline3);
+
+  // Add the X Axis
+  svg3.append("g")
+      .attr("transform", "translate(0," + height1 + ")")
+      .call(d3.axisBottom(x3));
+
+  // Add the Y Axis
+  svg3.append("g")
+      .call(d3.axisLeft(y3));
+
+});
+
+</script>
+
+
+</body>
+</html>
+
