@@ -10,3 +10,9 @@ a working copy of the library "pubsubclient-master.zip" by knolleary is supplied
 
 <img src="/esp8266_weather.jpg" style="width:20%;">
 <img src="/website.PNG" style="width:20%;">
+
+data was taken with unmodified nodemcu 1.0 with 4AAA NiMh Batteries. \
+If the ESP8266 is separated from board and powerd by a more efficient LDO and used with a LiPo, the batery would last way longer. \
+note: the 3 outliner at the end hapened when the battery were low and the BME280 didn't receive enough energy.
+
+TODO: warning on low battery
