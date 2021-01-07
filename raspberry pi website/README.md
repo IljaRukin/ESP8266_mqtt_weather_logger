@@ -1,6 +1,6 @@
 # Raspberry Pi - MQTT
 
-#### setup
+### setup
 
 install mosquitto:
 ```
@@ -29,7 +29,7 @@ show status
 service mosquitto status
 ```
 
-#### manual message/subscription:
+### manual message/subscription:
 
 subscribe
 ```
@@ -43,7 +43,7 @@ mosquitto_pub -h #hostname# -t #topic# -m "message"
 ```
 test:``mosquitto_pub -h localhost -t test -m "hello world"``
 
-#### password protection
+### password protection
 
 password protection:
 ```
@@ -60,7 +60,7 @@ now mqtt is password protected; to publish message you have to type:
 mosquitto_pub -h localhost -t "test" -m "hello world" -u "user" -P "password"
 ```
 
-#### log weather data
+### log weather data
 
 #create directory and files
 ```
