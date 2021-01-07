@@ -1,108 +1,87 @@
+# Raspberry Pi - MQTT
 
+#### setup
 
-### install nginx
-
-
-#install
-sudo apt-get install nginx
-
-#start/stop server:
-sudo /etc/init.d/nginx start
-sudo /etc/init.d/nginx stop
-sudo /etc/init.d/nginx restart
-
-#testing
-sudo nginx -t
-
-#configuration files directory
-/etc/nginx/
-
-#configuration files are:
-/etc/nginx/nginx.conf
-/etc/nginx/conf.d/*.conf
-/etc/nginx/sites-enabled/*
-[#example configuration: /etc/nginx/sites-available/default]
-
-#website files are located at:
-/var/www/html/index.html
-
-#error log:
-/var/log/nginx/access.log
-/var/log/nginx/error.log
-#disable log inside nginx.conf:
-access_log  /dev/null;
-error_log /dev/null;
-
-
-#change /var/www/ permissions to incorparate user: www-data
-sudo chown -R root:www-data /var/www/
-#nginx use user: www-data
-sudo nano /etc/nginx/sites-enabled/default
----
-user www-data;
----
-
-
-
-### install mosquitto:
+install mosquitto:
+```
 sudo apt-get install mosquitto
 sudo apt-get install mosquitto-clients
+```
 
-
-#configure
+edit config to listen for traffic
+```
 sudo nano /etc/mosquitto/conf.d/default.conf
----
+```
+by adding
+```
 persistence false
 # mqtt
 listener 1883
 protocol mqtt
----
+```
 
-#manual message/subscription:
-#subscribe
+restart server
+```
+sudo systemctl restart mosquitto
+```
+show status
+```
+service mosquitto status
+```
+
+#### manual message/subscription:
+
+subscribe
+```
 mosquitto_sub -h #hostname# -t #topic#
-#test:				mosquitto_sub -h localhost -t test
+```
+test:``mosquitto_sub -h localhost -t test``
 
-#publish message
+publish message
+```
 mosquitto_pub -h #hostname# -t #topic# -m "message"
-#test:				mosquitto_pub -h localhost -t test -m "hello world"
+```
+test:``mosquitto_pub -h localhost -t test -m "hello world"``
 
+#### password protection
 
-#password protection:
+password protection:
+```
 sudo mosquitto_passwd -c /etc/mosquitto/passwd #user#
-#and edit config:
+```
+edit config:
 sudo nano /etc/mosquitto/conf.d/default.conf
----
+```
 allow_anonymous false
 password_file /etc/mosquitto/passwd
----
-#now mqtt is password protected; to publish message you have to type:
+```
+now mqtt is password protected; to publish message you have to type:
+```
 mosquitto_pub -h localhost -t "test" -m "hello world" -u "user" -P "password"
+```
 
-
-#restart server
-sudo systemctl restart mosquitto
-
-#show status
-service mosquitto status
-
-
-------------------------------
-### log weather data
+#### log weather data
 
 #create directory and files
+```
 sudo mkdir /var/www/html/weather
 sudo touch /var/www/html/weather/pressure.csv
 sudo touch /var/www/html/weather/humidity.csv
 sudo touch /var/www/html/weather/temperature.csv
-#allow access
+```
+allow access
+```
 sudo chmod -R 777 /var/www/html/weather
 sudo chmod -R 777 /var/www/html/weather/pressure.csv
 sudo chmod -R 777 /var/www/html/weather/humidity.csv
 sudo chmod -R 777 /var/www/html/weather/temperature.csv
-#save data
+```
+save data by creating script
+```
 sudo nano /etc/init.d/log_mqtt.sh
----
+```
+with content:
+```
 #! /bin/sh
 
 ### BEGIN INIT INFO
@@ -134,11 +113,17 @@ case "$1" in
 esac
 
 exit 0
----
+```
 
-#make executable
+make executable
+```
 sudo chmod +x /etc/init.d/log_mqtt.sh
-#add script to run on boot
+```
+add script to run on boot
+```
 sudo update-rc.d log_mqtt.sh defaults
-###start script (for first time only):
+```
+start script (for first time only):
+```
 sudo /etc/init.d/log_mqtt.sh start
+```
