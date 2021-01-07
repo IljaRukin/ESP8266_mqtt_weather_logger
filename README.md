@@ -8,6 +8,7 @@ a working copy of the library "pubsubclient-master.zip" by knolleary is supplied
 ### issue
 - ESP deep-sleep with RF disabled saves more power, but then Wifi doesn't work on wake up
 
+here are some images of the setup and the web page:
 <img src="/esp8266_weather.jpg" style="width:20%;">
 <img src="/website.PNG" style="width:20%;">
 
